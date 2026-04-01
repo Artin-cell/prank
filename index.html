@@ -168,6 +168,17 @@
     text-transform: uppercase; color: var(--muted);
   }
 
+  .hero-image {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 90%;
+  width: auto;
+  object-fit: cover;
+  opacity: 0.9;
+  pointer-events: none;
+  }
+
   .btn-primary {
     display: inline-flex; align-items: center; gap: 12px;
     background: var(--accent);
@@ -655,6 +666,14 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
+
+  <!-- ВСТАВЛЕННОЕ ИЗОБРАЖЕНИЕ -->
+  <img 
+    src="https://avatars.mds.yandex.net/get-shedevrum/19801589/img_cfda59bb2df211f1a4caeeba09ae9e87/orig" 
+    class="hero-image"
+    alt="ShieldPack"
+  />
+
   <div class="hero-number">01</div>
 
   <p class="hero-eyebrow">Официальный анонс · Stildy Inc.</p>
@@ -666,11 +685,12 @@
     Первый в мире носимый защитный костюм, умещающийся в компактный рюкзак.
     Раскрывается менее чем за 0,2 секунды при обнаружении падения.
   </p>
+
   <div class="hero-meta">
     <span class="hero-date">16 марта 2025 · Пресс-релиз</span>
     <a href="#intro" class="btn-primary">
       Читать статью
-      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 16 16" fill="none">
         <path d="M8 3v10M3 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </a>
