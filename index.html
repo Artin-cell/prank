@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STILDY — ShieldPack: Будущее личной защиты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2eb;
+    --cream: #ede9df;
+    --accent: #c8ff00;
+    --orange: #ff5c1a;
+    --mid: #1e1e1e;
+    --muted: #6b6860;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(200,255,0,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.18s ease;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9000;
+    opacity: 0.35;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 48px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 6px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-tag {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 16px;
+    border-radius: 20px;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 70% 40%, rgba(200,255,0,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 20% 80%, rgba(255,92,26,0.06) 0%, transparent 60%);
+  }
+
+  .hero-number {
+    position: absolute;
+    top: 50%;
+    right: -40px;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(200px, 35vw, 480px);
+    color: rgba(255,255,255,0.018);
+    line-height: 1;
+    letter-spacing: -10px;
+    user-select: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 180px);
+    line-height: 0.9;
+    letter-spacing: -2px;
+    margin-bottom: 40px;
+    animation: fadeUp 1s 0.15s ease both;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+    color: var(--accent);
+    font-size: 0.7em;
+    letter-spacing: 0;
+  }
+
+  .hero-sub {
+    max-width: 500px;
+    line-height: 1.7;
+    color: rgba(245,242,235,0.6);
+    font-size: 16px;
+    margin-bottom: 52px;
+    animation: fadeUp 1s 0.3s ease both;
+  }
+
+  .hero-meta {
+    display: flex; gap: 48px; align-items: center;
+    animation: fadeUp 1s 0.45s ease both;
+  }
+
+  .hero-date {
+    font-size: 12px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--accent);
+    color: var(--black);
+    padding: 14px 28px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none; cursor: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(200,255,0,0.25);
+  }
+  .btn-primary svg { width: 16px; height: 16px; }
+
+  /* SCROLL INDICATOR */
+  .scroll-line {
+    position: absolute;
+    bottom: 40px; right: 48px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+  .scroll-line span {
+    font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--muted); writing-mode: vertical-rl;
+  }
+  .scroll-line::after {
+    content: '';
+    display: block;
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--muted), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+    margin: 0 48px;
+  }
+
+  /* SECTION LAYOUT */
+  .section {
+    padding: 120px 48px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 30px; height: 1px;
+    background: var(--accent);
+  }
+
+  /* INTRO */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-top: 60px;
+  }
+
+  .intro-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 4vw, 60px);
+    line-height: 1.2;
+    font-weight: 400;
+  }
+  .intro-title em { color: var(--accent); font-style: italic; }
+
+  .intro-body {
+    padding-top: 16px;
+  }
+  .intro-body p {
+    font-size: 16px;
+    line-height: 1.85;
+    color: rgba(245,242,235,0.7);
+    margin-bottom: 24px;
+  }
+
+  /* VISUAL: AIRBAG DIAGRAM */
+  .diagram-section {
+    background: var(--mid);
+    padding: 100px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .diagram-section::before {
+    content: 'SHIELDPACK';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 18vw, 260px);
+    color: rgba(255,255,255,0.015);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .diagram-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    flex: 1;
+    max-width: 240px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .stage.visible { opacity: 1; transform: translateY(0); }
+  .stage:nth-child(2) { transition-delay: 0.15s; }
+  .stage:nth-child(3) { transition-delay: 0.3s; }
+
+  .stage-icon {
+    width: 160px; height: 160px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    background: radial-gradient(circle at 50% 50%, rgba(200,255,0,0.03), transparent);
+  }
+
+  .stage-icon svg { width: 80px; height: 80px; }
+
+  .stage-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px; letter-spacing: 4px;
+    color: var(--accent);
+  }
+  .stage-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    text-align: center;
+  }
+  .stage-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .stage-arrow {
+    font-size: 32px;
+    color: rgba(200,255,0,0.3);
+    padding-top: 60px;
+    flex-shrink: 0;
+  }
+
+  /* SPECS */
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .spec-card {
+    background: var(--mid);
+    padding: 40px 32px;
+    border-top: 1px solid rgba(200,255,0,0.2);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .spec-card.visible { opacity: 1; transform: translateY(0); }
+  .spec-card:nth-child(2) { transition-delay: 0.1s; }
+  .spec-card:nth-child(3) { transition-delay: 0.2s; }
+  .spec-card:nth-child(4) { transition-delay: 0.3s; }
+
+  .spec-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .spec-unit {
+    font-size: 18px;
+    color: rgba(200,255,0,0.5);
+  }
+  .spec-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  /* TECH SECTION */
+  .tech-section {
+    padding: 120px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .tech-visual {
+    position: relative;
+    height: 500px;
+  }
+
+  .airbag-visual {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tech-content {}
+
+  .tech-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 3.5vw, 52px);
+    line-height: 1.2;
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
+
+  .tech-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .tech-list li {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 16px;
+    align-items: start;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(245,242,235,0.7);
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .tech-list li:last-child { border-bottom: none; }
+  .tech-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    padding-top: 3px;
+  }
+
+  /* QUOTE */
+  .quote-section {
+    padding: 100px 48px;
+    background: var(--mid);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-section::before {
+    content: '"';
+    position: absolute;
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 400px;
+    color: rgba(200,255,0,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3.5vw, 48px);
+    line-height: 1.4;
+    font-style: italic;
+    max-width: 900px;
+    margin: 0 auto 32px;
+    position: relative;
+    z-index: 1;
+    color: var(--white);
+  }
+
+  .quote-author {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .quote-author strong {
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  /* APPLICATIONS */
+  .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .app-card {
+    background: var(--mid);
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    transition: background 0.3s;
+  }
+  .app-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,255,0,0.04), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .app-card:hover::before { opacity: 1; }
+  .app-card:hover { background: #262626; }
+
+  .app-icon {
+    font-size: 40px;
+    margin-bottom: 24px;
+    display: block;
+  }
+  .app-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  .app-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* AVAILABILITY */
+  .avail-section {
+    padding: 120px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+  }
+  .avail-left { flex: 1; }
+  .avail-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 9vw, 120px);
+    line-height: 0.9;
+    margin-top: 20px;
+  }
+  .avail-title span { color: var(--accent); }
+  .avail-right {
+    flex: 0 0 400px;
+  }
+  .avail-body {
+    font-size: 16px;
+    line-height: 1.85;
+    color: rgba(245,242,235,0.6);
+    margin-bottom: 40px;
+  }
+
+  .price-tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .price-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .price-cur {
+    font-size: 20px;
+    color: var(--muted);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 2px;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 60px 48px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 6px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: none;
+  }
+  .footer-logo span { color: var(--accent); opacity: 0.5; }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.08); opacity: 1; }
+  }
+
+  @keyframes deployAirbag {
+    0% { r: 20; opacity: 0.3; }
+    100% { r: 115; opacity: 0.08; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .hero { padding: 0 24px 60px; }
+    .hero-meta { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .section { padding: 80px 24px; }
+    .intro-grid { grid-template-columns: 1fr; gap: 40px; }
+    .diagram-section { padding: 60px 24px; }
+    .diagram-wrap { flex-direction: column; gap: 40px; }
+    .stage-arrow { display: none; }
+    .specs-grid { grid-template-columns: 1fr 1fr; }
+    .tech-section { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
+    .tech-visual { height: 360px; }
+    .apps-grid { grid-template-columns: 1fr; }
+    .avail-section { flex-direction: column; padding: 80px 24px; }
+    .avail-right { flex: 0 0 auto; width: 100%; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 24px; }
+    .divider { margin: 0 24px; }
+    .scroll-line { display: none; }
+    .quote-section { padding: 60px 24px; }
+  }
+
+  @media (max-width: 600px) {
+    .specs-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">STIL<span>DY</span></a>
+  <span class="nav-tag">Технологии защиты · 2025</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-number">01</div>
+
+  <p class="hero-eyebrow">Официальный анонс · Stildy Inc.</p>
+  <h1 class="hero-title">
+    Shield<em>Pack</em><br>
+    Protect
+  </h1>
+  <p class="hero-sub">
+    Первый в мире носимый защитный костюм, умещающийся в компактный рюкзак.
+    Раскрывается менее чем за 0,2 секунды при обнаружении падения.
+  </p>
+  <div class="hero-meta">
+    <span class="hero-date">16 марта 2025 · Пресс-релиз</span>
+    <a href="#intro" class="btn-primary">
+      Читать статью
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 3v10M3 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="scroll-line"><span>Прокрутить</span></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- INTRO -->
+<section class="section" id="intro">
+  <div class="section-label">О разработке</div>
+
+  <div class="intro-grid">
+    <div>
+      <h2 class="intro-title">
+        Защита, которую<br>
+        <em>не замечаешь</em>,<br>
+        пока она не нужна
+      </h2>
+    </div>
+    <div class="intro-body">
+      <p>
+        Компания Stildy представляет революционную разработку в области персональной безопасности —
+        <strong>ShieldPack Protect</strong>. Устройство выглядит как обычный компактный рюкзак объёмом
+        около 3 литров и весит всего 1,4 кг. В повседневной жизни он практически неотличим
+        от обычного городского аксессуара.
+      </p>
+      <p>
+        Однако внутри скрыта сложнейшая инженерная система: девять датчиков движения, гироскоп,
+        барометр, акселерометр и нейросетевой процессор, непрерывно анализирующий характер перемещений
+        владельца. В момент обнаружения нештатного падения система активирует мгновенное раскрытие
+        защитного кокона из высокопрочного материала AIR-X³, полностью обволакивающего тело человека.
+      </p>
+      <p>
+        По словам основателя компании, идея пришла после изучения статистики бытовых травм:
+        более 60% серьёзных повреждений происходят именно при случайных падениях — в быту,
+        на улице, в спорте. ShieldPack меняет этот сценарий.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="diagram-section" id="how">
+  <div class="section-label" style="justify-content: center; margin-bottom: 60px;">Принцип работы</div>
+
+  <div class="diagram-wrap">
+
+    <!-- Stage 1 -->
+    <div class="stage" id="st1">
+      <div class="stage-icon">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Backpack -->
+          <rect x="24" y="28" width="32" height="36" rx="6" stroke="#c8ff00" stroke-width="1.5"/>
+          <path d="M30 28V22a10 10 0 0120 0v6" stroke="#c8ff00" stroke-width="1.5"/>
+          <circle cx="40" cy="44" r="4" fill="rgba(200,255,0,0.2)" stroke="#c8ff00" stroke-width="1"/>
+          <path d="M28 40h24" stroke="rgba(200,255,0,0.3)" stroke-width="1" stroke-dasharray="2 3"/>
+        </svg>
+      </div>
+      <span class="stage-num">01</span>
+      <h3 class="stage-title">Обычный режим</h3>
+      <p class="stage-desc">Компактный рюкзак весом 1,4 кг. Датчики постоянно анализируют движение.</p>
+    </div>
+
+    <div class="stage-arrow">→</div>
+
+    <!-- Stage 2 -->
+    <div class="stage" id="st2">
+      <div class="stage-icon">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Falling person -->
+          <circle cx="40" cy="18" r="7" stroke="#ff5c1a" stroke-width="1.5"/>
+          <path d="M40 25l-8 16" stroke="#ff5c1a" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M32 41l-6 12" stroke="#ff5c1a" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M32 41l10 8" stroke="#ff5c1a" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M40 33l10 6" stroke="#ff5c1a" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Alert symbol -->
+          <path d="M58 10l3 3-3 3-3-3 3-3z" fill="#ff5c1a"/>
+          <circle cx="58" cy="10" r="8" stroke="#ff5c1a" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="55.5" y="13.5" font-size="8" fill="#ff5c1a" font-family="sans-serif">!</text>
+        </svg>
+      </div>
+      <span class="stage-num">02</span>
+      <h3 class="stage-title">Обнаружение</h3>
+      <p class="stage-desc">ИИ-процессор за 50 мс идентифицирует неконтролируемое падение.</p>
+    </div>
+
+    <div class="stage-arrow">→</div>
+
+    <!-- Stage 3 -->
+    <div class="stage" id="st3">
+      <div class="stage-icon">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Airbag bubble -->
+          <circle cx="40" cy="40" r="30" stroke="#c8ff00" stroke-width="1.5" stroke-dasharray="3 2"/>
+          <circle cx="40" cy="40" r="22" fill="rgba(200,255,0,0.08)" stroke="#c8ff00" stroke-width="1"/>
+          <!-- Person inside -->
+          <circle cx="40" cy="31" r="5" stroke="white" stroke-width="1.2"/>
+          <path d="M40 36v14" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M33 42h14" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M35 50l5 6 5-6" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Rays -->
+          <path d="M40 7v6M40 67v6M7 40h6M67 40h6M16 16l4 4M60 60l4 4M60 16l-4 4M16 60l4 4" stroke="rgba(200,255,0,0.4)" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="stage-num">03</span>
+      <h3 class="stage-title">Раскрытие</h3>
+      <p class="stage-desc">За 0,2 секунды AIR-X³ кокон полностью обволакивает тело, поглощая удар.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="section">
+  <div class="section-label">Технические характеристики</div>
+
+  <div class="specs-grid">
+    <div class="spec-card" id="sc1">
+      <div class="spec-value">0.2<span class="spec-unit">с</span></div>
+      <div class="spec-label">Время раскрытия</div>
+    </div>
+    <div class="spec-card" id="sc2">
+      <div class="spec-value">1.4<span class="spec-unit">кг</span></div>
+      <div class="spec-label">Масса устройства</div>
+    </div>
+    <div class="spec-card" id="sc3">
+      <div class="spec-value">48<span class="spec-unit">ч</span></div>
+      <div class="spec-label">Заряд батареи</div>
+    </div>
+    <div class="spec-card" id="sc4">
+      <div class="spec-value">9<span class="spec-unit">×</span></div>
+      <div class="spec-label">Датчиков движения</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TECHNOLOGY -->
+<section class="tech-section">
+  <div class="tech-visual">
+    <svg class="airbag-visual" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background grid -->
+      <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        </pattern>
+        <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(200,255,0,0.12)"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="500" fill="url(#grid)"/>
+
+      <!-- Glow -->
+      <ellipse cx="200" cy="280" rx="180" ry="160" fill="url(#glowGrad)" opacity="0.6"/>
+
+      <!-- Airbag outer ring animated -->
+      <circle cx="200" cy="280" r="150" stroke="rgba(200,255,0,0.12)" stroke-width="1" stroke-dasharray="4 6">
+        <animateTransform attributeName="transform" type="rotate" from="0 200 280" to="360 200 280" dur="30s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="200" cy="280" r="130" stroke="rgba(200,255,0,0.18)" stroke-width="1" stroke-dasharray="2 4">
+        <animateTransform attributeName="transform" type="rotate" from="360 200 280" to="0 200 280" dur="20s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- Main airbag shape -->
+      <ellipse cx="200" cy="285" rx="118" ry="128" fill="rgba(200,255,0,0.05)" stroke="rgba(200,255,0,0.35)" stroke-width="1.5"/>
+
+      <!-- Inner contours -->
+      <ellipse cx="200" cy="285" rx="95" ry="105" fill="rgba(200,255,0,0.04)" stroke="rgba(200,255,0,0.15)" stroke-width="1" stroke-dasharray="3 4"/>
+      <ellipse cx="200" cy="285" rx="70" ry="78" fill="rgba(200,255,0,0.04)" stroke="rgba(200,255,0,0.10)" stroke-width="1"/>
+
+      <!-- Person inside (protected) -->
+      <!-- Head -->
+      <circle cx="200" cy="195" r="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <!-- Body -->
+      <path d="M200 221v70" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+      <!-- Arms -->
+      <path d="M200 240l-30 20M200 240l30 20" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round"/>
+      <!-- Legs -->
+      <path d="M200 291l-20 38M200 291l20 38" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round"/>
+
+      <!-- Deployment rays -->
+      <g opacity="0.4">
+        <line x1="200" y1="145" x2="200" y2="100" stroke="#c8ff00" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="200" y1="430" x2="200" y2="470" stroke="#c8ff00" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="76" y1="220" x2="40" y2="200" stroke="#c8ff00" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="324" y1="220" x2="360" y2="200" stroke="#c8ff00" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="90" y1="340" x2="55" y2="360" stroke="#c8ff00" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="310" y1="340" x2="345" y2="360" stroke="#c8ff00" stroke-width="1" stroke-dasharray="3 3"/>
+      </g>
+
+      <!-- Labels -->
+      <text x="200" y="90" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="10" fill="rgba(200,255,0,0.7)" letter-spacing="3">AIR-X³ КОКОН</text>
+      <text x="35" y="195" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="9" fill="rgba(255,255,255,0.35)" letter-spacing="2">ЗАЩИТА</text>
+      <text x="365" y="195" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="9" fill="rgba(255,255,255,0.35)" letter-spacing="2">ТЕЛА</text>
+
+      <!-- Rucksack at top -->
+      <rect x="178" y="50" width="44" height="50" rx="8" fill="rgba(200,255,0,0.08)" stroke="rgba(200,255,0,0.5)" stroke-width="1.5"/>
+      <path d="M184 50V43a16 16 0 0132 0v7" stroke="rgba(200,255,0,0.5)" stroke-width="1.5"/>
+      <rect x="187" y="62" width="26" height="18" rx="3" fill="none" stroke="rgba(200,255,0,0.3)" stroke-width="1"/>
+      <text x="200" y="78" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="8" fill="rgba(200,255,0,0.7)">SP</text>
+    </svg>
+  </div>
+
+  <div class="tech-content">
+    <div class="section-label">Технология AIR-X³</div>
+    <h2 class="tech-title">Инженерия,<br>вдохновлённая<br>природой</h2>
+    <ul class="tech-list">
+      <li>
+        <span class="tech-num">01</span>
+        <span>
+          <strong>Нейросетевой анализ движения</strong> — проприетарный чип MoveNet v4 обрабатывает 200 замеров в секунду, различая намеренные прыжки и неконтролируемое падение с точностью 99,7%.
+        </span>
+      </li>
+      <li>
+        <span class="tech-num">02</span>
+        <span>
+          <strong>Материал AIR-X³</strong> — разработан совместно с лабораторией CERN Materials Division. В 12 раз прочнее кевлара при весе в 4 раза меньше. В сложенном состоянии помещается в объёме теннисного мяча.
+        </span>
+      </li>
+      <li>
+        <span class="tech-num">03</span>
+        <span>
+          <strong>Микрогазовые патроны</strong> — экологичный азот под давлением обеспечивает мгновенное раскрытие без пиротехники. После срабатывания кокон можно сложить и перезарядить за 5 минут.
+        </span>
+      </li>
+      <li>
+        <span class="tech-num">04</span>
+        <span>
+          <strong>Умная периферия</strong> — Bluetooth-соединение со смартфоном, автоматический вызов экстренных служб после активации, GPS-геолокация и история событий в мобильном приложении.
+        </span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-section">
+  <p class="quote-text">
+    «Мы не создавали продукт. Мы создавали уверенность — право каждого человека
+    двигаться по миру, не боясь случайности.»
+  </p>
+  <p class="quote-author"><strong>Алексей Соренсен</strong> · Основатель и CEO, Stildy Inc.</p>
+</section>
+
+<!-- APPLICATIONS -->
+<section class="section">
+  <div class="section-label">Сферы применения</div>
+
+  <div class="apps-grid">
+    <div class="app-card">
+      <span class="app-icon">🏔️</span>
+      <h3 class="app-name">Активный спорт</h3>
+      <p class="app-desc">Горные лыжи, скейтбординг, велоспорт, паркур — ShieldPack становится невидимым партнёром экстремала, вступающим в игру только в критический момент.</p>
+    </div>
+    <div class="app-card">
+      <span class="app-icon">👴</span>
+      <h3 class="app-name">Пожилые люди</h3>
+      <p class="app-desc">По статистике ВОЗ, падения — причина №1 травматической смерти людей старше 65 лет. ShieldPack Protect создан прежде всего для них.</p>
+    </div>
+    <div class="app-card">
+      <span class="app-icon">🏗️</span>
+      <h3 class="app-name">Промышленность</h3>
+      <p class="app-desc">Строительные площадки, производственные цеха, работы на высоте — профессиональная версия ShieldPack Pro сертифицирована по стандарту EN ISO 11612.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AVAILABILITY -->
+<section class="avail-section">
+  <div class="avail-left">
+    <div class="section-label">Поступление в продажу</div>
+    <div class="avail-title">
+      Осень<br><span>2025</span>
+    </div>
+  </div>
+  <div class="avail-right">
+    <p class="avail-body">
+      Первая партия ShieldPack Protect поступит в продажу в сентябре 2025 года.
+      Предзаказы открываются 1 мая. Ранние покупатели получают расширенную гарантию на 5 лет
+      и бесплатную первую перезарядку газовых патронов.
+    </p>
+    <div class="price-tag">
+      <span class="price-val">1 299</span>
+      <span class="price-cur">€</span>
+    </div>
+    <br>
+    <a href="#" class="btn-primary">
+      Оформить предзаказ
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 8h10M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">STIL<span>DY</span></a>
+  <span class="footer-copy">© 2025 Stildy Inc. Все права защищены</span>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  (function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  document.querySelectorAll('a, button, .app-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      cursor.style.background = '#ff5c1a';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      cursor.style.background = '#c8ff00';
+    });
+  });
+
+  // Intersection Observer for staggered reveals
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.stage, .spec-card').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
